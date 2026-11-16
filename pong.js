@@ -1,4 +1,5 @@
 // Pure game logic (no DOM) so it can be unit-tested in node.
+(function () { // IIFE: keep names out of the global scope so index.html can destructure them
 const W = 640, H = 400, PW = 10, PH = 70, BS = 10, PSPEED = 300, AISPEED = 220, WIN = 7;
 
 function newState() {
@@ -47,4 +48,5 @@ function point(s, who) {
 }
 
 const api = { W, H, PW, PH, BS, WIN, newState, step };
-if (typeof module !== 'undefined') module.exports = api; else window.Pong = api;
+if (typeof module !== 'undefined') module.exports = api; else globalThis.Pong = api;
+})();

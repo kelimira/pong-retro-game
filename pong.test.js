@@ -51,3 +51,11 @@ test('loser receives the serve', () => {
   const s = newState(); s.ball = { x: W + 5, y: 300, vx: 200, vy: 0 }; step(s, 0, 0.01);
   assert.ok(s.ball.vx > 0); // player scored, AI (loser) receives
 });
+
+test('pong.js loaded as a classic script does not leak globals that clash with index.html', () => {
+  const vm = require('node:vm'), fs = require('node:fs');
+  const ctx = vm.createContext({});
+  vm.runInContext(fs.readFileSync(__dirname + '/pong.js', 'utf8'), ctx);
+  vm.runInContext('const { W, H, PW, PH, BS, newState, step } = Pong;', ctx); // throws if redeclared
+  assert.equal(vm.runInContext('typeof newState().ball.x', ctx), 'number');
+});
