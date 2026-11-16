@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8"><title>Pong</title>
+<style>body{margin:0;background:#000;display:grid;place-items:center;height:100vh}canvas{background:#000;border:2px solid #fff;max-width:100%}</style>
+<canvas id="c" width="640" height="400" aria-label="Pong game: W/S or arrow keys move your paddle; Enter restarts"></canvas>
+<script src="pong.js"></script>
+<script>
+const { W, H, PW, PH, BS, newState, step } = Pong, ctx = c.getContext('2d');
+let s = newState(), keys = {}, last = performance.now();
+addEventListener('keydown', e => { keys[e.key] = 1; if (e.key === 'Enter' && s.over) s = newState(); if (e.key.startsWith('Arrow')) e.preventDefault(); });
+addEventListener('keyup', e => delete keys[e.key]);
+function frame(t) {
+  const dt = Math.min((t - last) / 1000, 0.05); last = t;
+  step(s, (keys.s || keys.ArrowDown ? 1 : 0) - (keys.w || keys.ArrowUp ? 1 : 0), dt);
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  for (let y = 0; y < H; y += 20) ctx.fillRect(W / 2 - 2, y, 4, 10);
+  ctx.fillRect(0, s.p, PW, PH); ctx.fillRect(W - PW, s.ai, PW, PH); ctx.fillRect(s.ball.x, s.ball.y, BS, BS);
+  ctx.font = '48px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(s.score[0], W / 4, 60); ctx.fillText(s.score[1], 3 * W / 4, 60);
+  if (s.over) { ctx.font = '24px monospace'; ctx.fillText((s.score[0] > s.score[1] ? 'YOU WIN' : 'AI WINS') + ' - Enter to restart', W / 2, H / 2 + 80); }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
