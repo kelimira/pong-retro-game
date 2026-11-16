@@ -19,13 +19,14 @@ function step(s, input, dt) {
   // AI tracks ball center with capped speed so it is beatable
   const diff = b.y - (s.ai + PH / 2);
   s.ai = clamp(s.ai + Math.sign(diff) * Math.min(Math.abs(diff), AISPEED * dt));
+  const px = b.x;
   b.x += b.vx * dt; b.y += b.vy * dt;
   if (b.y < 0) { b.y = 0; b.vy = Math.abs(b.vy); }
   if (b.y > H - BS) { b.y = H - BS; b.vy = -Math.abs(b.vy); }
   // paddles: player at left, ai at right
   const hit = (py) => b.y + BS > py && b.y < py + PH;
-  if (b.vx < 0 && b.x <= PW && b.x > 0 && hit(s.p)) bounce(b, s.p, 1);
-  if (b.vx > 0 && b.x + BS >= W - PW && b.x < W && hit(s.ai)) bounce(b, s.ai, -1);
+  if (b.vx < 0 && b.x <= PW && px > 0 && hit(s.p)) bounce(b, s.p, 1);
+  if (b.vx > 0 && b.x + BS >= W - PW && px + BS < W && hit(s.ai)) bounce(b, s.ai, -1);
   if (b.x + BS < 0) point(s, 1);
   else if (b.x > W) point(s, 0);
   return s;
@@ -42,7 +43,7 @@ function bounce(b, py, dir) {
 function point(s, who) {
   s.score[who]++;
   if (s.score[who] >= WIN) { s.over = true; return; }
-  serve(s, who === 0 ? -1 : 1); // loser receives serve
+  serve(s, who === 0 ? 1 : -1); // loser receives serve
 }
 
 const api = { W, H, PW, PH, BS, WIN, newState, step };
