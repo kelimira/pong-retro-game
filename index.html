@@ -4,7 +4,6 @@
 <style>body{margin:0;background:#000;display:grid;place-items:center;height:100vh}canvas{background:#000;border:2px solid #fff;max-width:100%}</style>
 <canvas id="c" width="640" height="400" aria-label="Pong game: W/S or arrow keys move your paddle; Enter restarts"></canvas>
 <script src="pong.js"></script>
-</html>
 <script>
 const { W, H, PW, PH, BS, newState, step } = Pong, ctx = c.getContext('2d');
 let s = newState(), keys = {}, last = performance.now();

@@ -25,7 +25,7 @@ function step(s, input, dt) {
   if (b.y > H - BS) { b.y = H - BS; b.vy = -Math.abs(b.vy); }
   // paddles: player at left, ai at right
   const hit = (py) => b.y + BS > py && b.y < py + PH;
-  if (b.vx < 0 && b.x <= PW && px > 0 && hit(s.p)) bounce(b, s.p, 1);
+  if (b.vx < 0 && b.x <= PW && px >= PW && hit(s.p)) bounce(b, s.p, 1);
   if (b.vx > 0 && b.x + BS >= W - PW && px + BS < W && hit(s.ai)) bounce(b, s.ai, -1);
   if (b.x + BS < 0) point(s, 1);
   else if (b.x > W) point(s, 0);
